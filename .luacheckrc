@@ -4,7 +4,7 @@ globals = { "PudusRotationHelperDB", "PudusRotationHelper_ToggleRecord", "PudusR
 read_globals = {
   "CreateFrame", "UIParent", "InCombatLockdown", "EnumerateFrames", "GetActionInfo",
   "C_Spell", "issecretvalue", "GetTime", "UnitName", "UnitClass", "GetRealmName", "wipe",
-  "Settings", "SettingsPanel", "GameTooltip", "HideUIPanel", "ColorPickerFrame", "ChatFontNormal",
+  "Settings", "SettingsPanel", "GameTooltip", "tinsert", "UISpecialFrames", "HideUIPanel", "ColorPickerFrame", "ChatFontNormal",
   "InterfaceOptions_AddCategory", "InterfaceOptionsFrame_OpenToCategory", "unpack",
   "describe", "it", "assert",
 }

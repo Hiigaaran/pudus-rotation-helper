@@ -29,6 +29,10 @@ La forma principal de configurar la rotación es grabarla en el juego:
 2. Pulsa tus habilidades en el orden de la rotación. Cada pulsación cuenta aunque falle por falta de objetivo o recurso; mejor hacerlo contra un muñeco de entrenamiento.
 3. Pulsa de nuevo el atajo (o `/prh fin`) para guardar. `/prh deshacer` quita el último paso y `/prh cancelar` descarta la grabación.
 
+## Pantalla de bienvenida
+
+Al iniciar sesión con un personaje aparece una pantalla con las instrucciones básicas. Se desactiva con su casilla "Mostrar al iniciar sesión" y se vuelve a abrir con `/prh ayuda` o desde el panel de opciones. La imagen está en `Media/splash.tga` (1024×512).
+
 ## Panel de opciones
 
 `/prh` o Opciones > AddOns > Pudu's Rotation Helper:

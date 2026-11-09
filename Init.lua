@@ -90,7 +90,9 @@ events:SetScript("OnEvent", function(_, event, ...)
       ns.Options:Register()
     end
   elseif event == "PLAYER_ENTERING_WORLD" then
+    local isInitialLogin = ...
     ns.LoadRotation()
+    if isInitialLogin then ns.Splash:OnLogin() end
   elseif RECORD_EVENTS[event] then
     if recorder then
       local castGUID, spellID
@@ -132,6 +134,7 @@ events:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
 for e in pairs(RECORD_EVENTS) do events:RegisterUnitEvent(e, "player") end
 
 -- /prh                   -> abre el panel de opciones
+-- /prh ayuda             -> vuelve a mostrar la pantalla de bienvenida
 -- /prh bloquear          -> bloquea o desbloquea la posición de la lista
 -- /prh grabar            -> empieza a grabar la secuencia pulsando habilidades
 -- /prh fin               -> guarda la grabación      /prh cancelar  -> la descarta
@@ -160,12 +163,14 @@ SlashCmdList.PUDUSROTATIONHELPER = function(msg)
     print(PREFIX .. #steps .. " pasos guardados (" .. mode .. ").")
   elseif cmd == "opciones" or cmd == "options" or cmd == "" then
     ns.Options:Open()
+  elseif cmd == "bienvenida" or cmd == "ayuda" or cmd == "help" then
+    ns.Splash:Show()
   elseif cmd == "bloquear" or cmd == "lock" then
     ns.Bar:ToggleLock()
   elseif cmd == "reset" and rotation then
     rotation:Reset()
     refresh()
   else
-    print(PREFIX .. "/prh (opciones) | bloquear | grabar | fin | cancelar | deshacer | reset | set <IDs> | prio <IDs>")
+    print(PREFIX .. "/prh (opciones) | ayuda | bloquear | grabar | fin | cancelar | deshacer | reset | set <IDs> | prio <IDs>")
   end
 end

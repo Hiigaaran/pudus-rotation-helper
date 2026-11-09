@@ -113,6 +113,12 @@ local function build()
   end)
   record:SetPoint("LEFT", rotTitle, "RIGHT", 16, 0)
 
+  local help = button(panel, "Pantalla de bienvenida", 180, function()
+    if SettingsPanel and SettingsPanel:IsShown() then HideUIPanel(SettingsPanel) end
+    ns.Splash:Show()
+  end)
+  help:SetPoint("TOPRIGHT", panel, "TOPRIGHT", -16, -16)
+
   -- Importar / exportar en markdown -------------------------------------------------
   local ioTitle = label(panel, "Importar / exportar (markdown): pega aquí una lista preparada fuera del juego")
   ioTitle:SetPoint("TOPLEFT", 320, -64)

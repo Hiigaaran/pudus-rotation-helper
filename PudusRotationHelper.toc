@@ -12,4 +12,5 @@ Core/Config.lua
 UI/Bar.lua
 UI/Highlight.lua
 UI/Options.lua
+UI/Splash.lua
 Init.lua
