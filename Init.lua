@@ -105,6 +105,14 @@ local RECORD_EVENTS = {
 events:SetScript("OnEvent", function(_, event, ...)
   if event == "ADDON_LOADED" then
     if ... == addonName then
+      -- Si el .toc cambió y solo se hizo /reload, el juego no carga los archivos nuevos.
+      local missing = {}
+      for _, m in ipairs({ "Rotation", "Recorder", "Import", "Bar", "Highlight", "Manual", "Options", "Splash", "Focus" }) do
+        if not ns[m] then missing[#missing + 1] = m end
+      end
+      if #missing > 0 then
+        print(PREFIX .. "|cffff4040faltan módulos (" .. table.concat(missing, ", ") .. ").|r Cierra y vuelve a abrir el juego: /reload no carga archivos nuevos del addon.")
+      end
       ns.InitDB()
       ns.Bar:ApplySettings()
       ns.Options:Register()
