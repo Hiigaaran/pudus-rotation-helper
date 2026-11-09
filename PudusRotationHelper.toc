@@ -1,0 +1,18 @@
+## Interface: 16001
+## Title: Pudu's Rotation Helper
+## Notes: Barra con las próximas habilidades de tu rotación y resaltado del botón, compatible con la interfaz de mando.
+## Author: Simon
+## Version: 0.1.0
+## SavedVariables: PudusRotationHelperDB
+
+Core/Rotation.lua
+Core/Recorder.lua
+Core/Import.lua
+Core/Config.lua
+UI/Bar.lua
+UI/Highlight.lua
+UI/Manual.lua
+UI/Options.lua
+UI/Splash.lua
+UI/Focus.lua
+Init.lua
