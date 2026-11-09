@@ -9,7 +9,7 @@ local IMG_W, IMG_H = 480, 240
 
 -- Lo esencial del manual; el manual completo está en Opciones > AddOns > Manual de uso.
 local function instructions()
-  return ns.Manual.Text({ "start", "list", "focus" })
+  return ns.Manual.Text({ "start", "editor" })
     .. "\n\n|cffffd100/prh|r abre las opciones y el |cffffffffManual de uso|r completo (importar listas, comandos)."
 end
 

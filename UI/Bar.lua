@@ -5,6 +5,8 @@ local _, ns = ...
 -- o con los atajos "Mover lista" asignables a botones del mando.
 local ROW_GAP = 4
 local NAME_WIDTH = 160
+local PAD = 8      -- margen interior del marco
+local HEADER = 22  -- alto del título "Rotación actual"
 local NUDGE = 10 -- píxeles por pulsación de los atajos de mover
 
 local Bar = CreateFrame("Frame", "PudusRotationHelperBar", UIParent, "BackdropTemplate")
@@ -18,6 +20,21 @@ Bar.lastSpellIDs = {}
 
 Bar.label = Bar:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 Bar.label:SetPoint("BOTTOMLEFT", Bar, "TOPLEFT", 0, 4)
+
+-- Marco semitransparente con borde, siempre visible.
+Bar:SetBackdrop({
+  bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+  edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+  edgeSize = 14, insets = { left = 3, right = 3, top = 3, bottom = 3 },
+})
+
+Bar.title = Bar:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+Bar.title:SetPoint("TOPLEFT", PAD + 2, -PAD)
+Bar.title:SetText("Rotación actual")
+
+-- Resaltado del paso actual: fila completa (relleno + borde) que parpadea. Va por debajo
+-- del icono y el nombre, que se dibujan en un nivel superior.
+Bar.current = nil
 
 -- Botón de candado: siempre visible y clicable, aunque la lista esté bloqueada.
 local lock = CreateFrame("Button", nil, Bar)
@@ -48,6 +65,7 @@ local function getRow(i)
   local row = Bar.rows[i]
   if not row then
     row = CreateFrame("Frame", nil, Bar)
+    row:SetFrameLevel(Bar:GetFrameLevel() + 3)
     row.icon = row:CreateTexture(nil, "ARTWORK")
     row.icon:SetPoint("LEFT")
     row.name = row:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
@@ -59,14 +77,22 @@ local function getRow(i)
     row.selected:SetPoint("TOPLEFT", -2, 2)
     row.selected:SetPoint("BOTTOMRIGHT", 2, -2)
     row.selected:SetColorTexture(0.25, 0.75, 1, 0.35)
+    if i == 1 then
+      Bar.current = ns.CreateBorder(Bar, row, 2, nil, 0.22)
+      Bar.current:SetFrameLevel(Bar:GetFrameLevel() + 1)
+    end
     Bar.rows[i] = row
   end
   local size = ns.db.iconSize
   row:SetSize(size + 6 + NAME_WIDTH, size)
   row.icon:SetSize(size, size)
   row:ClearAllPoints()
-  row:SetPoint("TOPLEFT", Bar, "TOPLEFT", 4, -4 - (i - 1) * (size + ROW_GAP))
+  row:SetPoint("TOPLEFT", Bar, "TOPLEFT", PAD, -(PAD + HEADER) - (i - 1) * (size + ROW_GAP))
   return row
+end
+
+function Bar:ApplyStyle()
+  if self.current then self.current:ApplyStyle() end
 end
 
 function Bar:ApplyScale()
@@ -79,15 +105,13 @@ function Bar:ApplyLock()
   self:EnableMouse(not locked)
   if locked then
     self.lock:SetNormalTexture("Interface\\Buttons\\LockButton-Locked-Up")
-    self:SetBackdrop(nil)
+    self:SetBackdropColor(0, 0, 0, 0.45)
+    self:SetBackdropBorderColor(0.8, 0.8, 0.8, 0.6)
   else
+    -- Desbloqueada: tono azul para que se note que se puede mover.
     self.lock:SetNormalTexture("Interface\\Buttons\\LockButton-Unlocked-Up")
-    self:SetBackdrop({
-      bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-      edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-      edgeSize = 12, insets = { left = 3, right = 3, top = 3, bottom = 3 },
-    })
-    self:SetBackdropColor(0, 0.4, 0.8, 0.35)
+    self:SetBackdropColor(0, 0.4, 0.8, 0.45)
+    self:SetBackdropBorderColor(0.4, 0.8, 1, 0.9)
   end
   if ns.Refresh then ns.Refresh() else self:Refresh(self.lastSpellIDs, self.lastLabel, self.lastAllBright) end
 end
@@ -138,9 +162,10 @@ function Bar:Refresh(spellIDs, label, allBright, selected)
     row:Show()
   end
   for i = shown + 1, #self.rows do self.rows[i]:Hide() end
+  if self.current then self.current:SetShown(shown > 0 and not allBright) end
   local rows = math.max(1, shown)
-  self:SetSize(size + 6 + NAME_WIDTH + 8, rows * size + (rows - 1) * ROW_GAP + 8)
-  self:SetShown(shown > 0 or not ns.db.locked or (ns.Focus and ns.Focus.active))
+  self:SetSize(size + 6 + NAME_WIDTH + PAD * 2, PAD + HEADER + rows * size + (rows - 1) * ROW_GAP + PAD)
+  self:SetShown(shown > 0 or not ns.db.locked or (ns.EditorUI and ns.EditorUI.open))
 end
 
 ns.Bar = Bar
