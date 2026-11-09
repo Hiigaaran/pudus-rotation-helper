@@ -21,9 +21,16 @@ end
 -- no existir en Forever y se puede pintar de cualquier color. Parpadea (sube y baja la
 -- opacidad) mientras está visible, salvo que el jugador lo desactive en las opciones.
 -- Lo usan el resaltado de los botones y la fila actual de la lista.
-function ns.CreateBorder(parent, target, thickness, strata)
+-- fillAlpha (opcional): además del borde, rellena el interior con el mismo color y esa opacidad.
+function ns.CreateBorder(parent, target, thickness, strata, fillAlpha)
   local o = CreateFrame("Frame", nil, parent)
   if strata then o:SetFrameStrata(strata) end
+  if fillAlpha then
+    o.fill = o:CreateTexture(nil, "BACKGROUND")
+    o.fill:SetPoint("TOPLEFT", thickness, -thickness)
+    o.fill:SetPoint("BOTTOMRIGHT", -thickness, thickness)
+    o.fillAlpha = fillAlpha
+  end
   o.edges = {}
   for i = 1, 4 do o.edges[i] = o:CreateTexture(nil, "OVERLAY") end
   local top, bottom, left, right = unpack(o.edges)
@@ -46,6 +53,7 @@ function ns.CreateBorder(parent, target, thickness, strata)
   function o:ApplyStyle()
     local c = ns.db.color
     for _, edge in ipairs(self.edges) do edge:SetColorTexture(c.r, c.g, c.b, c.a or 1) end
+    if self.fill then self.fill:SetColorTexture(c.r, c.g, c.b, self.fillAlpha) end
     if ns.db.blink ~= false and self:IsShown() then
       if not self.anim:IsPlaying() then self.anim:Play() end
     else
