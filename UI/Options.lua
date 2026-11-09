@@ -98,9 +98,17 @@ local function build()
   lockHelp:SetPoint("TOPLEFT", lockCheck, "BOTTOMLEFT", 4, -2)
   lockHelp:SetWidth(280)
 
+  -- Reiniciar al salir de combate ------------------------------------------------------
+  local resetCheck = CreateFrame("CheckButton", nil, panel, "UICheckButtonTemplate")
+  resetCheck:SetPoint("TOPLEFT", lockHelp, "BOTTOMLEFT", -4, -10)
+  local resetLabel = label(panel, "Volver al primer paso al salir de combate")
+  resetLabel:SetPoint("LEFT", resetCheck, "RIGHT", 4, 0)
+  resetCheck:SetScript("OnClick", function(self) ns.db.resetOnCombatEnd = self:GetChecked() and true or false end)
+  panel.resetCheck = resetCheck
+
   -- Rotación actual ----------------------------------------------------------------
   local rotTitle = label(panel, "Rotación actual")
-  rotTitle:SetPoint("TOPLEFT", lockHelp, "BOTTOMLEFT", 0, -20)
+  rotTitle:SetPoint("TOPLEFT", resetCheck, "BOTTOMLEFT", 4, -16)
   local rotText = label(panel, "", "GameFontHighlightSmall")
   rotText:SetPoint("TOPLEFT", rotTitle, "BOTTOMLEFT", 0, -6)
   rotText:SetWidth(260)
@@ -186,6 +194,7 @@ function panel:Refresh()
   if not self.built then return end
   self.slider:SetValue(ns.db.scale or 1)
   self.lockCheck:SetChecked(ns.db.locked)
+  self.resetCheck:SetChecked(ns.db.resetOnCombatEnd ~= false)
   local c = ns.db.color
   self.swatch.tex:SetColorTexture(c.r, c.g, c.b)
   local steps, mode = ns.GetActiveProfile()

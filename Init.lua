@@ -130,6 +130,9 @@ events:SetScript("OnEvent", function(_, event, ...)
     if rotation and rotation.mode == "priority" then refresh() end
   elseif event == "PLAYER_REGEN_ENABLED" then
     if ns.Highlight.dirty then ns.Highlight:Rebuild() end
+    -- Al salir de combate la secuencia vuelve al primer paso, para empezar el siguiente
+    -- combate desde el principio y no a la mitad.
+    if rotation and ns.db.resetOnCombatEnd ~= false then rotation:Reset() end
     refresh()
   else
     -- Cambio de casilla, de página o de set de barras de mando. Fuera de combate volvemos a

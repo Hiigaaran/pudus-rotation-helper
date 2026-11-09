@@ -62,6 +62,7 @@ Con teclado: flechas, Enter, Supr y Retroceso; con ratón, clic en las filas y l
 
 - **Escala de la lista** de 50 % a 200 %.
 - **Color del resaltado** de la habilidad en las barras (teclado y mando).
+- **Volver al primer paso al salir de combate** (activado por defecto), para que el siguiente combate empiece desde el principio.
 - **Bloquear la posición de la lista.** También con el candado sobre la lista, `/prh bloquear` o el atajo "Bloquear / desbloquear lista". Desbloqueada, se arrastra con el ratón (o el cursor del mando) o con los atajos "Mover lista arriba/abajo/izquierda/derecha", asignables a combinaciones del mando. La posición se guarda.
 - **Rotación actual** y botón para abrir el editor.
 - **Importar / exportar en markdown.** Los addons no pueden leer archivos, así que el `.md` se prepara fuera del juego y se pega en el cuadro. Formato (ver `ejemplos/plantilla.md`):

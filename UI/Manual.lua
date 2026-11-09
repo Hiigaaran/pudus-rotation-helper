@@ -14,7 +14,7 @@ Manual.SECTIONS = {
     lines = {
       "1. En Opciones > Atajos de teclado > AddOns, asigna " .. K:format("\"Abrir / cerrar editor de rotación\"") .. " a una combinación del mando (p. ej. LB+RB+Back). También " .. K:format("/prh editar") .. ".",
       "2. En el editor, a la derecha están las habilidades de tus barras. Elige una con la cruceta y agrégala con " .. K:format("A") .. ". Se agrega después del paso marcado a la izquierda, así que puedes armar la rotación en orden sin lanzar nada.",
-      "3. Pulsa " .. K:format("B") .. " para guardar y salir. La lista muestra las siguientes habilidades con su nombre, el botón de la próxima se resalta en tus barras (también las de mando) y avanza cada vez que usas la habilidad que toca.",
+      "3. Pulsa " .. K:format("B") .. " para guardar y salir. La lista muestra las siguientes habilidades con su nombre, el botón de la próxima se resalta en tus barras (también las de mando) y avanza cada vez que usas la habilidad que toca. Al salir de combate vuelve al primer paso (se puede desactivar en las opciones).",
     },
   },
   {
