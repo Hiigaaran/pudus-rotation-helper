@@ -12,6 +12,7 @@ local INSTRUCTIONS = table.concat({
   "2. Pulsa el atajo, usa tus habilidades en el orden de tu rotación (mejor contra un muñeco) y vuelve a pulsarlo para guardar.",
   "3. La lista muestra las siguientes habilidades y el botón de la próxima se resalta en tus barras, también las de mando.",
   "4. Coloca la lista donde quieras y bloquéala con el candado o el atajo |cffffffff\"Bloquear / desbloquear lista\"|r.",
+  "5. Con el mando, asigna |cffffffff\"Foco en la lista\"|r a una combinación (p. ej. LB+RB+Back). En foco, la cruceta elige o mueve, A bloquea, X saca el paso elegido y B sale. Esa combinación y esos botones, mientras dura el foco, quedan reservados y no lanzan habilidades.",
   "",
   "|cffffd100/prh|r abre las opciones: escala, color del resaltado e importar o exportar listas en markdown.",
 }, "\n")

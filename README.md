@@ -14,6 +14,8 @@ El addon solo muestra sugerencias; no lanza habilidades.
 | `Core/Recorder.lua` | Grabador de secuencias pulsando habilidades |
 | `Core/Import.lua` | Importar y exportar rotaciones en markdown |
 | `UI/Options.lua` | Panel de opciones |
+| `UI/Splash.lua` | Pantalla de bienvenida |
+| `UI/Focus.lua` | Modo foco para editar la lista con el mando |
 | `Bindings.xml` | Atajos asignables (grabar, deshacer) |
 | `Core/Config.lua` | Rotaciones guardadas por clase y perfil |
 | `UI/Bar.lua` | Barra movible con los próximos iconos |
@@ -32,6 +34,19 @@ La forma principal de configurar la rotación es grabarla en el juego:
 ## Pantalla de bienvenida
 
 Al iniciar sesión con un personaje aparece una pantalla con las instrucciones básicas. Se desactiva con su casilla "Mostrar al iniciar sesión" y se vuelve a abrir con `/prh ayuda` o desde el panel de opciones. La imagen está en `Media/splash.tga` (1024×512).
+
+## Modo foco (mando)
+
+Asigna el atajo "Foco en la lista" a una combinación del mando (por ejemplo LB+RB+Back) en Opciones > Atajos de teclado > AddOns, o usa `/prh foco`. Mientras dura el foco, estos botones editan la lista en vez de lanzar habilidades:
+
+| Botón | Lista bloqueada | Lista desbloqueada |
+| --- | --- | --- |
+| Cruceta | Elegir paso (arriba/abajo) | Mover la lista |
+| A | Desbloquear | Bloquear |
+| X | Sacar el paso elegido | Sacar el paso elegido |
+| B | Salir del foco | Salir del foco |
+
+Con teclado: flechas, Enter, Supr y Retroceso. La combinación del foco queda reservada para el addon: si la asignas a una habilidad, el juego le quita el atajo al foco. El foco no se abre en combate y se cierra solo al entrar en combate, porque el juego no permite cambiar atajos durante el combate. Durante una grabación, el foco edita lo grabado.
 
 ## Panel de opciones
 

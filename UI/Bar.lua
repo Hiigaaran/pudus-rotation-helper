@@ -55,6 +55,10 @@ local function getRow(i)
     row.name:SetJustifyH("LEFT")
     row.name:SetWidth(NAME_WIDTH)
     row.name:SetWordWrap(false)
+    row.selected = row:CreateTexture(nil, "BACKGROUND")
+    row.selected:SetPoint("TOPLEFT", -2, 2)
+    row.selected:SetPoint("BOTTOMRIGHT", 2, -2)
+    row.selected:SetColorTexture(0.25, 0.75, 1, 0.35)
     Bar.rows[i] = row
   end
   local size = ns.db.iconSize
@@ -85,7 +89,7 @@ function Bar:ApplyLock()
     })
     self:SetBackdropColor(0, 0.4, 0.8, 0.35)
   end
-  self:Refresh(self.lastSpellIDs, self.lastLabel, self.lastAllBright)
+  if ns.Refresh then ns.Refresh() else self:Refresh(self.lastSpellIDs, self.lastLabel, self.lastAllBright) end
 end
 
 function Bar:ApplySettings()
@@ -113,8 +117,9 @@ function Bar:Nudge(dx, dy)
   savePosition()
 end
 
--- label: texto opcional encima de la lista; allBright: todas las filas sin atenuar (grabación).
-function Bar:Refresh(spellIDs, label, allBright)
+-- label: texto opcional encima de la lista; allBright: todas las filas sin atenuar (grabación);
+-- selected: fila marcada en el modo foco.
+function Bar:Refresh(spellIDs, label, allBright, selected)
   self.lastSpellIDs, self.lastLabel, self.lastAllBright = spellIDs, label, allBright
   local size = ns.db.iconSize
   local shown = #spellIDs
@@ -129,12 +134,13 @@ function Bar:Refresh(spellIDs, label, allBright)
     row.name:SetText(ns.SpellName(spellID) or tostring(spellID))
     -- La primera fila (la siguiente a lanzar) se ve entera; el resto, atenuadas.
     row:SetAlpha((allBright or i == 1) and 1 or 0.55)
+    row.selected:SetShown(i == selected)
     row:Show()
   end
   for i = shown + 1, #self.rows do self.rows[i]:Hide() end
   local rows = math.max(1, shown)
   self:SetSize(size + 6 + NAME_WIDTH + 8, rows * size + (rows - 1) * ROW_GAP + 8)
-  self:SetShown(shown > 0 or not ns.db.locked)
+  self:SetShown(shown > 0 or not ns.db.locked or (ns.Focus and ns.Focus.active))
 end
 
 ns.Bar = Bar

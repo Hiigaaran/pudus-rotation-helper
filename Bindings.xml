@@ -5,6 +5,9 @@
   <Binding name="PUDUSROTATIONHELPER_UNDO" header="PUDUSROTATIONHELPER" category="ADDONS">
     PudusRotationHelper_Undo()
   </Binding>
+  <Binding name="PUDUSROTATIONHELPER_TOGGLEFOCUS" header="PUDUSROTATIONHELPER" category="ADDONS">
+    PudusRotationHelper_ToggleFocus()
+  </Binding>
   <Binding name="PUDUSROTATIONHELPER_TOGGLELOCK" header="PUDUSROTATIONHELPER" category="ADDONS">
     PudusRotationHelper_ToggleLock()
   </Binding>

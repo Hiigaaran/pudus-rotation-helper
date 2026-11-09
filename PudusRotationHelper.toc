@@ -13,4 +13,5 @@ UI/Bar.lua
 UI/Highlight.lua
 UI/Options.lua
 UI/Splash.lua
+UI/Focus.lua
 Init.lua
