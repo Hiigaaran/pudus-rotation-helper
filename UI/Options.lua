@@ -113,6 +113,9 @@ local function build()
   end)
   record:SetPoint("LEFT", rotTitle, "RIGHT", 16, 0)
 
+  local manualHint = label(panel, "El manual de uso completo está en la sección \"Manual de uso\", debajo de este panel en la lista de AddOns.", "GameFontHighlightSmall")
+  manualHint:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -4)
+
   local help = button(panel, "Pantalla de bienvenida", 180, function()
     if SettingsPanel and SettingsPanel:IsShown() then HideUIPanel(SettingsPanel) end
     ns.Splash:Show()
@@ -203,8 +206,10 @@ function Options:Register()
   if Settings and Settings.RegisterCanvasLayoutCategory then
     self.category = Settings.RegisterCanvasLayoutCategory(panel, panel.name)
     Settings.RegisterAddOnCategory(self.category)
+    ns.Manual:RegisterPanel(self.category)
   elseif InterfaceOptions_AddCategory then
     InterfaceOptions_AddCategory(panel)
+    ns.Manual:RegisterPanel(nil)
   end
 end
 

@@ -11,6 +11,7 @@ Core/Import.lua
 Core/Config.lua
 UI/Bar.lua
 UI/Highlight.lua
+UI/Manual.lua
 UI/Options.lua
 UI/Splash.lua
 UI/Focus.lua

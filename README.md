@@ -13,6 +13,7 @@ El addon solo muestra sugerencias; no lanza habilidades.
 | `Core/Rotation.lua` | Motor de rotación en Lua puro, testeable fuera del juego |
 | `Core/Recorder.lua` | Grabador de secuencias pulsando habilidades |
 | `Core/Import.lua` | Importar y exportar rotaciones en markdown |
+| `UI/Manual.lua` | Manual de uso compartido y su sección en el panel |
 | `UI/Options.lua` | Panel de opciones |
 | `UI/Splash.lua` | Pantalla de bienvenida |
 | `UI/Focus.lua` | Modo foco para editar la lista con el mando |
@@ -30,6 +31,10 @@ La forma principal de configurar la rotación es grabarla en el juego:
 1. Asigna el atajo "Grabar / guardar secuencia" en Opciones > Atajos de teclado > AddOns (sirve un botón del mando) o escribe `/prh grabar`.
 2. Pulsa tus habilidades en el orden de la rotación. Cada pulsación cuenta aunque falle por falta de objetivo o recurso; mejor hacerlo contra un muñeco de entrenamiento.
 3. Pulsa de nuevo el atajo (o `/prh fin`) para guardar. `/prh deshacer` quita el último paso y `/prh cancelar` descarta la grabación.
+
+## Manual de uso
+
+Las instrucciones viven en `UI/Manual.lua` y se muestran en dos sitios con el mismo texto: lo esencial en la pantalla de bienvenida y el manual completo en Opciones > AddOns > Pudu's Rotation Helper > Manual de uso.
 
 ## Pantalla de bienvenida
 
