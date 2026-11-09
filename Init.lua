@@ -17,8 +17,8 @@ local function loadRotation()
 end
 
 events:SetScript("OnEvent", function(_, event, ...)
-  if event == "ADDON_LOADED" and ... == addonName then
-    ns.InitDB()
+  if event == "ADDON_LOADED" then
+    if ... == addonName then ns.InitDB() end
   elseif event == "PLAYER_ENTERING_WORLD" then
     loadRotation()
   elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
