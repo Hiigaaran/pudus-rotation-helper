@@ -59,6 +59,10 @@ local function getRow(i)
     row.selected:SetPoint("TOPLEFT", -2, 2)
     row.selected:SetPoint("BOTTOMRIGHT", 2, -2)
     row.selected:SetColorTexture(0.25, 0.75, 1, 0.35)
+    if i == 1 then
+      -- Borde que parpadea alrededor del icono del paso actual (mismo color que el resaltado).
+      row.glow = ns.CreateBorder(row, row.icon, 2)
+    end
     Bar.rows[i] = row
   end
   local size = ns.db.iconSize
@@ -67,6 +71,11 @@ local function getRow(i)
   row:ClearAllPoints()
   row:SetPoint("TOPLEFT", Bar, "TOPLEFT", 4, -4 - (i - 1) * (size + ROW_GAP))
   return row
+end
+
+function Bar:ApplyStyle()
+  local first = self.rows[1]
+  if first and first.glow then first.glow:ApplyStyle() end
 end
 
 function Bar:ApplyScale()
@@ -134,6 +143,7 @@ function Bar:Refresh(spellIDs, label, allBright, selected)
     row.name:SetText(ns.SpellName(spellID) or tostring(spellID))
     -- La primera fila (la siguiente a lanzar) se ve entera; el resto, atenuadas.
     row:SetAlpha((allBright or i == 1) and 1 or 0.55)
+    if row.glow then row.glow:SetShown(not allBright) end
     row.selected:SetShown(i == selected)
     row:Show()
   end

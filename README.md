@@ -61,7 +61,8 @@ Con teclado: flechas, Enter, Supr y Retroceso; con ratón, clic en las filas y l
 `/prh` o Opciones > AddOns > Pudu's Rotation Helper:
 
 - **Escala de la lista** de 50 % a 200 %.
-- **Color del resaltado** de la habilidad en las barras (teclado y mando).
+- **Pasos visibles en la lista**, de 1 a 10.
+- **Color del resaltado** de la habilidad en las barras (teclado y mando) y del paso actual de la lista, y **parpadeo** de ambos (activado por defecto).
 - **Volver al primer paso al salir de combate** (activado por defecto), para que el siguiente combate empiece desde el principio.
 - **Bloquear la posición de la lista.** También con el candado sobre la lista, `/prh bloquear` o el atajo "Bloquear / desbloquear lista". Desbloqueada, se arrastra con el ratón (o el cursor del mando) o con los atajos "Mover lista arriba/abajo/izquierda/derecha", asignables a combinaciones del mando. La posición se guarda.
 - **Rotación actual** y botón para abrir el editor.

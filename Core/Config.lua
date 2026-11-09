@@ -5,7 +5,7 @@ local _, ns = ...
 -- funciona igual para las nueve clases de Forever sin listas por clase.
 local defaults = {
   profiles = {}, active = {}, lastByClass = {}, barSize = 4, iconSize = 40,
-  scale = 1, locked = false, showSplash = true, resetOnCombatEnd = true, position = nil, color = { r = 1, g = 0.85, b = 0.1, a = 1 },
+  scale = 1, locked = false, showSplash = true, resetOnCombatEnd = true, blink = true, position = nil, color = { r = 1, g = 0.85, b = 0.1, a = 1 },
 }
 
 function ns.InitDB()

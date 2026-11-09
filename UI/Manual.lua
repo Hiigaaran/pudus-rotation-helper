@@ -43,7 +43,7 @@ Manual.SECTIONS = {
     key = "options",
     title = "Opciones e importación",
     lines = {
-      "- " .. K:format("/prh") .. " abre las opciones: escala de la lista, color del resaltado y bloqueo.",
+      "- " .. K:format("/prh") .. " abre las opciones: escala de la lista, pasos visibles (1 a 10), color del resaltado, parpadeo y bloqueo.",
       "- Importar: prepara un .md fuera del juego, cópialo y pégalo en el cuadro de " .. K:format("Importar / exportar") .. ". Formato: un título " .. K:format("# Nombre") .. ", opcionalmente " .. K:format("clase:") .. " y " .. K:format("modo: secuencia | prioridad") .. ", y una lista numerada con el nombre y/o el ID de cada habilidad, p. ej. " .. K:format("1. Revancha (6572)") .. ".",
       "- Exportar copia tu rotación actual en ese mismo formato para guardarla o compartirla.",
       "- Funciona con todas las clases: las rotaciones se guardan por clase y cualquier rango de una habilidad cuenta como la misma.",

@@ -50,13 +50,48 @@ local function build()
   end)
   panel.slider = slider
 
+  -- Pasos visibles en la lista ---------------------------------------------------
+  local stepsLabel = label(panel, "")
+  stepsLabel:SetPoint("TOPLEFT", slider, "BOTTOMLEFT", 0, -20)
+  local stepsSlider = CreateFrame("Slider", nil, panel, "BackdropTemplate")
+  stepsSlider:SetOrientation("HORIZONTAL")
+  stepsSlider:SetSize(220, 16)
+  stepsSlider:SetPoint("TOPLEFT", stepsLabel, "BOTTOMLEFT", 0, -8)
+  stepsSlider:SetBackdrop({
+    bgFile = "Interface\\Buttons\\UI-SliderBar-Background",
+    edgeFile = "Interface\\Buttons\\UI-SliderBar-Border",
+    tile = true, tileSize = 8, edgeSize = 8,
+    insets = { left = 3, right = 3, top = 6, bottom = 6 },
+  })
+  stepsSlider:SetThumbTexture("Interface\\Buttons\\UI-SliderBar-Button-Horizontal")
+  stepsSlider:SetMinMaxValues(1, 10)
+  stepsSlider:SetValueStep(1)
+  stepsSlider:SetObeyStepOnDrag(true)
+  stepsSlider:SetScript("OnValueChanged", function(_, value)
+    value = math.floor(value + 0.5)
+    ns.db.barSize = value
+    stepsLabel:SetText(("Pasos visibles en la lista: %d"):format(value))
+    if ns.Refresh then ns.Refresh() end
+  end)
+  panel.stepsSlider = stepsSlider
+
   -- Color del resaltado --------------------------------------------------------
   local colorLabel = label(panel, "Color del resaltado")
-  colorLabel:SetPoint("TOPLEFT", slider, "BOTTOMLEFT", 0, -24)
+  colorLabel:SetPoint("TOPLEFT", stepsSlider, "BOTTOMLEFT", 0, -24)
 
   local swatch = CreateFrame("Button", nil, panel, "BackdropTemplate")
   swatch:SetSize(24, 24)
   swatch:SetPoint("LEFT", colorLabel, "RIGHT", 12, 0)
+
+  local blinkCheck = CreateFrame("CheckButton", nil, panel, "UICheckButtonTemplate")
+  blinkCheck:SetPoint("LEFT", swatch, "RIGHT", 16, 0)
+  local blinkLabel = label(panel, "Parpadeo")
+  blinkLabel:SetPoint("LEFT", blinkCheck, "RIGHT", 2, 0)
+  blinkCheck:SetScript("OnClick", function(self)
+    ns.db.blink = self:GetChecked() and true or false
+    ns.Highlight:ApplyColor()
+  end)
+  panel.blinkCheck = blinkCheck
   swatch:SetBackdrop({ edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 8 })
   swatch.tex = swatch:CreateTexture(nil, "ARTWORK")
   swatch.tex:SetPoint("TOPLEFT", 3, -3)
@@ -193,6 +228,8 @@ end
 function panel:Refresh()
   if not self.built then return end
   self.slider:SetValue(ns.db.scale or 1)
+  self.stepsSlider:SetValue(ns.db.barSize or 4)
+  self.blinkCheck:SetChecked(ns.db.blink ~= false)
   self.lockCheck:SetChecked(ns.db.locked)
   self.resetCheck:SetChecked(ns.db.resetOnCombatEnd ~= false)
   local c = ns.db.color
