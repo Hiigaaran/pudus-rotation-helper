@@ -10,8 +10,24 @@ local function refresh()
   if nextSpell then ns.Highlight:Show(nextSpell) end
 end
 
+-- Lista para usar: usable (recurso, Revancha activa) y sin reutilización pendiente.
+-- En combate estos valores pueden ser secretos; si lo son, no podemos saberlo y la damos por lista.
+local function isReady(spellID)
+  local usable = C_Spell.IsSpellUsable(spellID)
+  if issecretvalue and issecretvalue(usable) then usable = true end
+  if not usable then return false end
+  local cd = C_Spell.GetSpellCooldown(spellID)
+  if cd then
+    local active, onGCD = cd.isActive, cd.isOnGCD
+    if issecretvalue and (issecretvalue(active) or issecretvalue(onGCD)) then return true end
+    if active and not onGCD then return false end
+  end
+  return true
+end
+
 local function loadRotation()
-  rotation = ns.Rotation.new(ns.GetActiveSteps())
+  local steps, mode = ns.GetActiveProfile()
+  rotation = ns.Rotation.new(steps, mode, isReady)
   ns.Highlight:Rebuild()
   refresh()
 end
@@ -24,6 +40,8 @@ events:SetScript("OnEvent", function(_, event, ...)
   elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
     local _, _, spellID = ...
     if rotation and rotation:OnCast(spellID) then refresh() end
+  elseif event == "SPELL_UPDATE_USABLE" or event == "SPELL_UPDATE_COOLDOWN" then
+    if rotation and rotation.mode == "priority" then refresh() end
   elseif event == "PLAYER_REGEN_ENABLED" then
     if ns.Highlight.dirty then ns.Highlight:Rebuild() end
     refresh()
@@ -40,23 +58,27 @@ events:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
 events:RegisterEvent("PLAYER_REGEN_ENABLED")
 events:RegisterEvent("ACTIONBAR_PAGE_CHANGED")
 events:RegisterEvent("UPDATE_BONUS_ACTIONBAR")
+events:RegisterEvent("SPELL_UPDATE_USABLE")
+events:RegisterEvent("SPELL_UPDATE_COOLDOWN")
 events:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
 
--- /prh set 133 116 133   -> guarda la rotación (IDs de hechizo)
+-- /prh set 133 116 133   -> secuencia fija (IDs de hechizo)
+-- /prh prio 23922 6572   -> lista de prioridades
 -- /prh reset             -> vuelve al primer paso
 SLASH_PUDUSROTATIONHELPER1 = "/prh"
 SlashCmdList.PUDUSROTATIONHELPER = function(msg)
   local cmd, rest = msg:match("^(%S*)%s*(.-)$")
-  if cmd == "set" then
+  if cmd == "set" or cmd == "prio" then
     local steps = {}
     for id in rest:gmatch("%d+") do steps[#steps + 1] = tonumber(id) end
-    ns.SetSteps(steps)
+    local mode = cmd == "prio" and "priority" or "sequence"
+    ns.SetProfile(steps, mode)
     loadRotation()
-    print("Pudu's Rotation Helper: " .. #steps .. " pasos guardados.")
+    print("Pudu's Rotation Helper: " .. #steps .. " pasos guardados (" .. mode .. ").")
   elseif cmd == "reset" and rotation then
     rotation:Reset()
     refresh()
   else
-    print("Uso: /prh set <spellID> <spellID> ...  |  /prh reset")
+    print("Uso: /prh set <spellIDs> (secuencia)  |  /prh prio <spellIDs> (prioridad)  |  /prh reset")
   end
 end

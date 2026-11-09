@@ -20,7 +20,8 @@ El addon solo muestra sugerencias; no lanza habilidades.
 ## Uso
 
 ```
-/prh set 23922 6572 7386   -- IDs de hechizo en orden
+/prh set 23922 6572 7386    -- secuencia fija que se repite
+/prh prio 23922 6572 7386   -- lista de prioridades: sugiere la primera habilidad lista
 /prh reset
 ```
 

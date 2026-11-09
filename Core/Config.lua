@@ -1,6 +1,6 @@
 local _, ns = ...
 
--- Forever es estilo 2004: puede no existir GetSpecialization. Usamos clase + perfil.
+-- Forever no tiene GetSpecialization (comprobado): guardamos por clase + perfil.
 local defaults = { profiles = {}, active = {}, barSize = 4, iconSize = 40 }
 
 function ns.InitDB()
@@ -15,17 +15,20 @@ local function charKey()
   return UnitName("player") .. "-" .. GetRealmName()
 end
 
-function ns.GetActiveSteps()
+-- Devuelve steps, mode. Acepta perfiles antiguos guardados como lista simple.
+function ns.GetActiveProfile()
   local profileName = ns.db.active[charKey()] or "default"
   local _, class = UnitClass("player")
-  local byClass = ns.db.profiles[class] or {}
-  return byClass[profileName] or {}
+  local profile = (ns.db.profiles[class] or {})[profileName]
+  if not profile then return {}, "sequence" end
+  if profile.steps then return profile.steps, profile.mode end
+  return profile, "sequence"
 end
 
-function ns.SetSteps(steps, profileName)
+function ns.SetProfile(steps, mode, profileName)
   local _, class = UnitClass("player")
   profileName = profileName or "default"
   ns.db.profiles[class] = ns.db.profiles[class] or {}
-  ns.db.profiles[class][profileName] = steps
+  ns.db.profiles[class][profileName] = { steps = steps, mode = mode }
   ns.db.active[charKey()] = profileName
 end

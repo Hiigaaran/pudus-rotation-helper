@@ -1,7 +1,7 @@
 -- Ejecutar con: busted tests/   (desde la carpeta del addon, Lua 5.1)
 local Rotation = loadfile("Core/Rotation.lua")("PudusRotationHelper", {})
 
-describe("Rotation", function()
+describe("Rotation en modo secuencia", function()
   it("muestra los próximos pasos y da la vuelta", function()
     local r = Rotation.new({ 1, 2, 3 })
     r:OnCast(1); r:OnCast(2)
@@ -18,5 +18,27 @@ describe("Rotation", function()
     local r = Rotation.new({ 1, 2, 3 })
     r:OnCast(2)
     assert.equal(3, r:Current())
+  end)
+end)
+
+describe("Rotation en modo prioridad", function()
+  it("sugiere la primera habilidad lista", function()
+    local ready = { [1] = false, [2] = true, [3] = true }
+    local r = Rotation.new({ 1, 2, 3 }, "priority", function(id) return ready[id] end)
+    assert.equal(2, r:Current())
+    ready[1] = true
+    assert.equal(1, r:Current())
+  end)
+
+  it("pone al final las que no están listas", function()
+    local r = Rotation.new({ 1, 2, 3 }, "priority", function(id) return id ~= 1 end)
+    assert.same({ 2, 3, 1 }, r:Peek(3))
+    assert.same({ 2, 3 }, r:Peek(2))
+  end)
+
+  it("pide refrescar solo con hechizos de la lista", function()
+    local r = Rotation.new({ 1, 2 }, "priority")
+    assert.is_true(r:OnCast(2))
+    assert.is_false(r:OnCast(99))
   end)
 end)
