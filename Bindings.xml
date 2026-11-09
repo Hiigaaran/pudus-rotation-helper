@@ -1,0 +1,8 @@
+<Bindings>
+  <Binding name="PUDUSROTATIONHELPER_TOGGLERECORD" header="PUDUSROTATIONHELPER" category="ADDONS">
+    PudusRotationHelper_ToggleRecord()
+  </Binding>
+  <Binding name="PUDUSROTATIONHELPER_UNDO" header="PUDUSROTATIONHELPER" category="ADDONS">
+    PudusRotationHelper_Undo()
+  </Binding>
+</Bindings>

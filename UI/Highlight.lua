@@ -48,12 +48,13 @@ function Highlight:Rebuild()
 end
 
 -- Leer .action y GetActionInfo y mostrar/ocultar frames propios está permitido en combate.
+-- spellID nil oculta todos los resaltados.
 function Highlight:Show(spellID)
   for button, o in pairs(self.overlays) do
     local slot = slotOf(button)
     local kind, id
     if slot then kind, id = GetActionInfo(slot) end
-    o:SetShown(kind == "spell" and id == spellID and button:IsVisible())
+    o:SetShown(spellID ~= nil and kind == "spell" and id == spellID and button:IsVisible())
   end
 end
 

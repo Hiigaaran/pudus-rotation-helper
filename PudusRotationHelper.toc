@@ -6,6 +6,7 @@
 ## SavedVariables: PudusRotationHelperDB
 
 Core/Rotation.lua
+Core/Recorder.lua
 Core/Config.lua
 UI/Bar.lua
 UI/Highlight.lua
