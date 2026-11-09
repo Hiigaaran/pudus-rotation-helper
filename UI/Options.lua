@@ -85,9 +85,22 @@ local function build()
     end
   end)
 
+  -- Bloquear la lista ----------------------------------------------------------------
+  local lockCheck = CreateFrame("CheckButton", nil, panel, "UICheckButtonTemplate")
+  lockCheck:SetPoint("TOPLEFT", colorLabel, "BOTTOMLEFT", -4, -16)
+  local lockLabel = label(panel, "Bloquear la posición de la lista")
+  lockLabel:SetPoint("LEFT", lockCheck, "RIGHT", 4, 0)
+  lockCheck:SetScript("OnClick", function(self)
+    if (self:GetChecked() and true or false) ~= (ns.db.locked and true or false) then ns.Bar:ToggleLock() end
+  end)
+  panel.lockCheck = lockCheck
+  local lockHelp = label(panel, "También con el candado sobre la lista, /prh bloquear o el atajo \"Bloquear / desbloquear lista\" (asignable al mando). Desbloqueada, arrástrala o usa los atajos \"Mover lista\".", "GameFontHighlightSmall")
+  lockHelp:SetPoint("TOPLEFT", lockCheck, "BOTTOMLEFT", 4, -2)
+  lockHelp:SetWidth(280)
+
   -- Rotación actual ----------------------------------------------------------------
   local rotTitle = label(panel, "Rotación actual")
-  rotTitle:SetPoint("TOPLEFT", colorLabel, "BOTTOMLEFT", 0, -28)
+  rotTitle:SetPoint("TOPLEFT", lockHelp, "BOTTOMLEFT", 0, -20)
   local rotText = label(panel, "", "GameFontHighlightSmall")
   rotText:SetPoint("TOPLEFT", rotTitle, "BOTTOMLEFT", 0, -6)
   rotText:SetWidth(260)
@@ -161,7 +174,9 @@ local function build()
 end
 
 function panel:Refresh()
+  if not self.built then return end
   self.slider:SetValue(ns.db.scale or 1)
+  self.lockCheck:SetChecked(ns.db.locked)
   local c = ns.db.color
   self.swatch.tex:SetColorTexture(c.r, c.g, c.b)
   local steps, mode = ns.GetActiveProfile()
@@ -175,6 +190,8 @@ panel:SetScript("OnShow", function(self)
   if not self.built then build() self.built = true end
   self:Refresh()
 end)
+
+function Options:Refresh() panel:Refresh() end
 
 function Options:Register()
   if Settings and Settings.RegisterCanvasLayoutCategory then

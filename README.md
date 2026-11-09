@@ -35,6 +35,7 @@ La forma principal de configurar la rotación es grabarla en el juego:
 
 - **Escala de la lista** de 50 % a 200 %.
 - **Color del resaltado** de la habilidad en las barras (teclado y mando).
+- **Bloquear la posición de la lista.** También con el candado sobre la lista, `/prh bloquear` o el atajo "Bloquear / desbloquear lista". Desbloqueada, se arrastra con el ratón (o el cursor del mando) o con los atajos "Mover lista arriba/abajo/izquierda/derecha", asignables a combinaciones del mando. La posición se guarda.
 - **Rotación actual** y botón para grabarla.
 - **Importar / exportar en markdown.** Los addons no pueden leer archivos, así que el `.md` se prepara fuera del juego y se pega en el cuadro. Formato (ver `ejemplos/plantilla.md`):
 
@@ -51,6 +52,8 @@ modo: secuencia          (opcional: secuencia | prioridad)
 ## Clases
 
 Funciona con las nueve clases de Forever: los perfiles se guardan por clase, cualquier rango de un hechizo cuenta como el mismo, y el resaltado sigue al botón aunque cambien las barras por postura (guerrero), forma (druida) o sigilo (pícaro). Los hechizos de mascota no se siguen.
+
+La lista se muestra en vertical, con icono y nombre de cada habilidad; la primera fila es la siguiente a usar.
 
 Después, la barra muestra los próximos pasos, el botón del siguiente se resalta y avanza al usar cada habilidad.
 

@@ -5,4 +5,19 @@
   <Binding name="PUDUSROTATIONHELPER_UNDO" header="PUDUSROTATIONHELPER" category="ADDONS">
     PudusRotationHelper_Undo()
   </Binding>
+  <Binding name="PUDUSROTATIONHELPER_TOGGLELOCK" header="PUDUSROTATIONHELPER" category="ADDONS">
+    PudusRotationHelper_ToggleLock()
+  </Binding>
+  <Binding name="PUDUSROTATIONHELPER_MOVEUP" header="PUDUSROTATIONHELPER" category="ADDONS">
+    PudusRotationHelper_MoveUp()
+  </Binding>
+  <Binding name="PUDUSROTATIONHELPER_MOVEDOWN" header="PUDUSROTATIONHELPER" category="ADDONS">
+    PudusRotationHelper_MoveDown()
+  </Binding>
+  <Binding name="PUDUSROTATIONHELPER_MOVELEFT" header="PUDUSROTATIONHELPER" category="ADDONS">
+    PudusRotationHelper_MoveLeft()
+  </Binding>
+  <Binding name="PUDUSROTATIONHELPER_MOVERIGHT" header="PUDUSROTATIONHELPER" category="ADDONS">
+    PudusRotationHelper_MoveRight()
+  </Binding>
 </Bindings>

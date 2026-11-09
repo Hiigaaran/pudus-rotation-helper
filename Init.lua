@@ -86,7 +86,7 @@ events:SetScript("OnEvent", function(_, event, ...)
   if event == "ADDON_LOADED" then
     if ... == addonName then
       ns.InitDB()
-      ns.Bar:ApplyScale()
+      ns.Bar:ApplySettings()
       ns.Options:Register()
     end
   elseif event == "PLAYER_ENTERING_WORLD" then
@@ -132,6 +132,7 @@ events:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
 for e in pairs(RECORD_EVENTS) do events:RegisterUnitEvent(e, "player") end
 
 -- /prh                   -> abre el panel de opciones
+-- /prh bloquear          -> bloquea o desbloquea la posición de la lista
 -- /prh grabar            -> empieza a grabar la secuencia pulsando habilidades
 -- /prh fin               -> guarda la grabación      /prh cancelar  -> la descarta
 -- /prh deshacer          -> quita el último paso grabado
@@ -159,10 +160,12 @@ SlashCmdList.PUDUSROTATIONHELPER = function(msg)
     print(PREFIX .. #steps .. " pasos guardados (" .. mode .. ").")
   elseif cmd == "opciones" or cmd == "options" or cmd == "" then
     ns.Options:Open()
+  elseif cmd == "bloquear" or cmd == "lock" then
+    ns.Bar:ToggleLock()
   elseif cmd == "reset" and rotation then
     rotation:Reset()
     refresh()
   else
-    print(PREFIX .. "/prh (opciones) | grabar | fin | cancelar | deshacer | reset | set <IDs> | prio <IDs>")
+    print(PREFIX .. "/prh (opciones) | bloquear | grabar | fin | cancelar | deshacer | reset | set <IDs> | prio <IDs>")
   end
 end
