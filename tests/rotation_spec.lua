@@ -1,0 +1,22 @@
+-- Ejecutar con: busted tests/   (desde la carpeta del addon, Lua 5.1)
+local Rotation = loadfile("Core/Rotation.lua")("PudusRotationHelper", {})
+
+describe("Rotation", function()
+  it("muestra los próximos pasos y da la vuelta", function()
+    local r = Rotation.new({ 1, 2, 3 })
+    r:OnCast(1); r:OnCast(2)
+    assert.same({ 3, 1, 2 }, r:Peek(3))
+  end)
+
+  it("ignora hechizos fuera de la rotación", function()
+    local r = Rotation.new({ 1, 2 })
+    assert.is_false(r:OnCast(99))
+    assert.equal(1, r:Current())
+  end)
+
+  it("salta si el jugador se adelanta un paso", function()
+    local r = Rotation.new({ 1, 2, 3 })
+    r:OnCast(2)
+    assert.equal(3, r:Current())
+  end)
+end)
