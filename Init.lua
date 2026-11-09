@@ -35,9 +35,9 @@ local function isReady(spellID)
   return true
 end
 
-local function loadRotation()
+function ns.LoadRotation()
   local steps, mode = ns.GetActiveProfile()
-  rotation = ns.Rotation.new(steps, mode, isReady)
+  rotation = ns.Rotation.new(steps, mode, isReady, ns.SameSpell)
   ns.Highlight:Rebuild()
   refresh()
 end
@@ -59,8 +59,10 @@ local function stopRecording(save)
   else
     print(PREFIX .. "grabación cancelada.")
   end
-  loadRotation()
+  ns.LoadRotation()
 end
+
+ns.Refresh = refresh
 
 function PudusRotationHelper_ToggleRecord()
   if recorder then stopRecording(true) else startRecording() end
@@ -82,9 +84,13 @@ local RECORD_EVENTS = {
 
 events:SetScript("OnEvent", function(_, event, ...)
   if event == "ADDON_LOADED" then
-    if ... == addonName then ns.InitDB() end
+    if ... == addonName then
+      ns.InitDB()
+      ns.Bar:ApplyScale()
+      ns.Options:Register()
+    end
   elseif event == "PLAYER_ENTERING_WORLD" then
-    loadRotation()
+    ns.LoadRotation()
   elseif RECORD_EVENTS[event] then
     if recorder then
       local castGUID, spellID
@@ -125,6 +131,7 @@ events:RegisterEvent("SPELL_UPDATE_COOLDOWN")
 events:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
 for e in pairs(RECORD_EVENTS) do events:RegisterUnitEvent(e, "player") end
 
+-- /prh                   -> abre el panel de opciones
 -- /prh grabar            -> empieza a grabar la secuencia pulsando habilidades
 -- /prh fin               -> guarda la grabación      /prh cancelar  -> la descarta
 -- /prh deshacer          -> quita el último paso grabado
@@ -148,12 +155,14 @@ SlashCmdList.PUDUSROTATIONHELPER = function(msg)
     for id in rest:gmatch("%d+") do steps[#steps + 1] = tonumber(id) end
     local mode = cmd == "prio" and "priority" or "sequence"
     ns.SetProfile(steps, mode)
-    loadRotation()
+    ns.LoadRotation()
     print(PREFIX .. #steps .. " pasos guardados (" .. mode .. ").")
+  elseif cmd == "opciones" or cmd == "options" or cmd == "" then
+    ns.Options:Open()
   elseif cmd == "reset" and rotation then
     rotation:Reset()
     refresh()
   else
-    print(PREFIX .. "/prh grabar | fin | cancelar | deshacer | reset | set <IDs> | prio <IDs>")
+    print(PREFIX .. "/prh (opciones) | grabar | fin | cancelar | deshacer | reset | set <IDs> | prio <IDs>")
   end
 end

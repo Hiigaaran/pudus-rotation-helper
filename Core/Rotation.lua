@@ -12,8 +12,11 @@ Rotation.__index = Rotation
 
 -- steps: lista de spellIDs, p. ej. {23922, 6572, 7386}
 -- isReady: función(spellID) -> boolean; solo se usa en modo "priority". Por defecto, todo listo.
-function Rotation.new(steps, mode, isReady)
+-- same: función(a, b) -> boolean para comparar hechizos (en el juego, también por nombre,
+--       para que otro rango del mismo hechizo cuente). Por defecto, igualdad de ID.
+function Rotation.new(steps, mode, isReady, same)
   return setmetatable({
+    same = same or function(a, b) return a == b end,
     steps = steps or {},
     mode = mode == "priority" and "priority" or "sequence",
     isReady = isReady or function() return true end,
@@ -54,13 +57,13 @@ function Rotation:OnCast(spellID)
   if count == 0 then return false end
   if self.mode == "priority" then
     for _, id in ipairs(self.steps) do
-      if id == spellID then return true end
+      if self.same(id, spellID) then return true end
     end
     return false
   end
   for offset = 0, count - 1 do
     local i = ((self.index - 1 + offset) % count) + 1
-    if self.steps[i] == spellID then
+    if self.same(self.steps[i], spellID) then
       self.index = (i % count) + 1
       return true
     end

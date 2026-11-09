@@ -5,9 +5,11 @@ local _, ns = ...
 --
 -- Comprobado en WoW: Forever (Interface 16001): las barras de mando son botones con
 -- campo .action, p. ej. GamepadMainActionBarFramePageUnitLeftCenteredAnchorLeftBarActionButton1
--- (casilla 185). Al cambiar de set de barras la casilla del botón puede cambiar, así que
--- guardamos la lista de botones y resolvemos el hechizo de cada uno al mostrar.
+-- (casilla 185). Al cambiar de set de barras, de postura (guerrero) o de forma (druida) la
+-- casilla del botón puede cambiar, así que guardamos la lista de botones y resolvemos el
+-- hechizo de cada uno al mostrar.
 local Highlight = { buttons = {}, overlays = {} }
+local THICKNESS = 3
 
 local function slotOf(button)
   local slot = button.action
@@ -15,20 +17,32 @@ local function slotOf(button)
   if type(slot) == "number" and slot > 0 then return slot end
 end
 
+-- Borde de cuatro lados con texturas de color sólido: no depende de atlas que podrían
+-- no existir en Forever y se puede pintar de cualquier color.
 local function overlayFor(button)
   local o = Highlight.overlays[button]
   if not o then
     o = CreateFrame("Frame", nil, UIParent)
     o:SetFrameStrata("HIGH")
-    local border = o:CreateTexture(nil, "OVERLAY")
-    border:SetAllPoints()
-    border:SetAtlas("UI-HUD-ActionBar-IconFrame-Mouseover") -- por verificar en Forever
-    border:SetVertexColor(1, 0.85, 0.1)
-    o:SetAllPoints(button)
+    o.edges = {}
+    for i = 1, 4 do o.edges[i] = o:CreateTexture(nil, "OVERLAY") end
+    local top, bottom, left, right = unpack(o.edges)
+    top:SetPoint("TOPLEFT"); top:SetPoint("TOPRIGHT"); top:SetHeight(THICKNESS)
+    bottom:SetPoint("BOTTOMLEFT"); bottom:SetPoint("BOTTOMRIGHT"); bottom:SetHeight(THICKNESS)
+    left:SetPoint("TOPLEFT"); left:SetPoint("BOTTOMLEFT"); left:SetWidth(THICKNESS)
+    right:SetPoint("TOPRIGHT"); right:SetPoint("BOTTOMRIGHT"); right:SetWidth(THICKNESS)
+    o:SetPoint("TOPLEFT", button, "TOPLEFT", -THICKNESS, THICKNESS)
+    o:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", THICKNESS, -THICKNESS)
     o:Hide()
     Highlight.overlays[button] = o
   end
+  local c = ns.db.color
+  for _, edge in ipairs(o.edges) do edge:SetColorTexture(c.r, c.g, c.b, c.a or 1) end
   return o
+end
+
+function Highlight:ApplyColor()
+  for button in pairs(self.overlays) do overlayFor(button) end
 end
 
 -- Recorre todos los frames con un campo de acción (barras de teclado y de mando).
@@ -53,8 +67,8 @@ function Highlight:Show(spellID)
   for button, o in pairs(self.overlays) do
     local slot = slotOf(button)
     local kind, id
-    if slot then kind, id = GetActionInfo(slot) end
-    o:SetShown(spellID ~= nil and kind == "spell" and id == spellID and button:IsVisible())
+    if slot and spellID then kind, id = GetActionInfo(slot) end
+    o:SetShown(kind == "spell" and ns.SameSpell(id, spellID) and button:IsVisible())
   end
 end
 

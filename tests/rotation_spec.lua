@@ -42,3 +42,13 @@ describe("Rotation en modo prioridad", function()
     assert.is_false(r:OnCast(99))
   end)
 end)
+
+describe("Rotation con otro rango del mismo hechizo", function()
+  it("avanza si el lanzado es otro rango", function()
+    local names = { [284] = "Golpe heroico", [285] = "Golpe heroico", [72] = "Golpe de escudo" }
+    local same = function(a, b) return a == b or names[a] == names[b] end
+    local r = Rotation.new({ 284, 72 }, "sequence", nil, same)
+    r:OnCast(285)
+    assert.equal(72, r:Current())
+  end)
+end)

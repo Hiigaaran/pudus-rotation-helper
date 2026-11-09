@@ -25,6 +25,10 @@ local function getIcon(i, size, allBright)
   return tex
 end
 
+function Bar:ApplyScale()
+  self:SetScale(ns.db.scale or 1)
+end
+
 -- label: texto opcional encima de la barra; allBright: todos los iconos sin atenuar (grabación).
 function Bar:Refresh(spellIDs, label, allBright)
   self.label:SetText(label or "")

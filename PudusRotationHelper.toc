@@ -7,7 +7,9 @@
 
 Core/Rotation.lua
 Core/Recorder.lua
+Core/Import.lua
 Core/Config.lua
 UI/Bar.lua
 UI/Highlight.lua
+UI/Options.lua
 Init.lua
