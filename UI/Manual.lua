@@ -74,33 +74,47 @@ function Manual.Text(keys)
 end
 
 -- Subsección "Manual de uso" bajo el panel del addon en Opciones > AddOns.
+-- Se construye en el momento (no al mostrarse) y con tamaños fijos: el contenedor de
+-- Opciones puede tener tamaño 0 cuando se crean los hijos, y así el texto no depende de eso.
+local TEXT_W, VIEW_W, VIEW_H = 560, 590, 470
+
 function Manual:RegisterPanel(parentCategory)
   local panel = CreateFrame("Frame")
   panel.name = "Manual de uso"
-  panel:SetScript("OnShow", function(self)
-    if self.built then return end
-    self.built = true
-    local title = self:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-    title:SetPoint("TOPLEFT", 16, -16)
-    title:SetText("Pudu's Rotation Helper: manual de uso")
 
-    local scroll = CreateFrame("ScrollFrame", nil, self, "UIPanelScrollFrameTemplate")
+  local title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+  title:SetPoint("TOPLEFT", 16, -16)
+  title:SetText("Pudu's Rotation Helper: manual de uso")
+
+  local ok, scroll = pcall(CreateFrame, "ScrollFrame", nil, panel, "UIPanelScrollFrameTemplate")
+  local content
+  if ok and scroll then
     scroll:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -12)
-    scroll:SetPoint("BOTTOMRIGHT", -32, 16)
-    local content = CreateFrame("Frame", nil, scroll)
-    content:SetSize(600, 10)
+    scroll:SetSize(VIEW_W, VIEW_H)
+    content = CreateFrame("Frame", nil, scroll)
+    content:SetSize(TEXT_W, VIEW_H)
     scroll:SetScrollChild(content)
-    local text = content:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-    text:SetPoint("TOPLEFT")
-    text:SetWidth(600)
-    text:SetJustifyH("LEFT")
-    text:SetSpacing(3)
-    text:SetText(Manual.Text())
-    content:SetHeight(text:GetStringHeight() + 20)
-    scroll:SetScript("OnSizeChanged", function(_, w)
-      if w and w > 50 then content:SetWidth(w) text:SetWidth(w - 8) content:SetHeight(text:GetStringHeight() + 20) end
-    end)
-  end)
+  else
+    -- Sin plantilla de desplazamiento: texto directo en el panel.
+    content = CreateFrame("Frame", nil, panel)
+    content:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -12)
+    content:SetSize(TEXT_W, VIEW_H)
+  end
+
+  local text = content:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+  text:SetPoint("TOPLEFT", 0, 0)
+  text:SetWidth(TEXT_W)
+  text:SetJustifyH("LEFT")
+  text:SetJustifyV("TOP")
+  text:SetSpacing(3)
+  text:SetText(Manual.Text())
+
+  local function fit()
+    content:SetHeight(math.max(VIEW_H, text:GetStringHeight() + 20))
+  end
+  fit()
+  panel:SetScript("OnShow", fit)
+
   if Settings and Settings.RegisterCanvasLayoutSubcategory and parentCategory then
     Settings.RegisterCanvasLayoutSubcategory(parentCategory, panel, panel.name)
   elseif InterfaceOptions_AddCategory then
