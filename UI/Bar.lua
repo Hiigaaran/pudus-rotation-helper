@@ -140,7 +140,7 @@ function Bar:Refresh(spellIDs, label, allBright, selected)
   for i = shown + 1, #self.rows do self.rows[i]:Hide() end
   local rows = math.max(1, shown)
   self:SetSize(size + 6 + NAME_WIDTH + 8, rows * size + (rows - 1) * ROW_GAP + 8)
-  self:SetShown(shown > 0 or not ns.db.locked or (ns.Focus and ns.Focus.active))
+  self:SetShown(shown > 0 or not ns.db.locked or (ns.EditorUI and ns.EditorUI.open))
 end
 
 ns.Bar = Bar

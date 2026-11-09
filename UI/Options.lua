@@ -107,9 +107,9 @@ local function build()
   rotText:SetJustifyV("TOP")
   panel.rotText = rotText
 
-  local record = button(panel, "Grabar rotación", 160, function()
+  local record = button(panel, "Abrir editor", 120, function()
     if SettingsPanel and SettingsPanel:IsShown() then HideUIPanel(SettingsPanel) end
-    PudusRotationHelper_ToggleRecord()
+    ns.EditorUI:Open()
   end)
   record:SetPoint("LEFT", rotTitle, "RIGHT", 16, 0)
 
@@ -191,7 +191,7 @@ function panel:Refresh()
   local steps, mode = ns.GetActiveProfile()
   local lines = { ("Perfil: %s (%s)"):format(ns.ActiveProfileName(), mode == "priority" and "prioridad" or "secuencia") }
   for i, id in ipairs(steps) do lines[#lines + 1] = ("%d. %s"):format(i, ns.SpellName(id) or id) end
-  if #steps == 0 then lines[#lines + 1] = "Sin pasos. Usa \"Grabar rotación\" o importa una lista." end
+  if #steps == 0 then lines[#lines + 1] = "Sin pasos. Usa \"Abrir editor\" o importa una lista." end
   self.rotText:SetText(table.concat(lines, "\n"))
 end
 

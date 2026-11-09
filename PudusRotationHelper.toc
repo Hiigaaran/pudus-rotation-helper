@@ -8,11 +8,12 @@
 Core/Rotation.lua
 Core/Recorder.lua
 Core/Import.lua
+Core/EditorModel.lua
 Core/Config.lua
 UI/Bar.lua
 UI/Highlight.lua
 UI/Manual.lua
 UI/Options.lua
 UI/Splash.lua
-UI/Focus.lua
+UI/Editor.lua
 Init.lua

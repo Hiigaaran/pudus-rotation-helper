@@ -12,9 +12,9 @@ Manual.SECTIONS = {
     key = "start",
     title = "Cómo empezar",
     lines = {
-      "1. En Opciones > Atajos de teclado > AddOns, asigna " .. K:format("\"Grabar / guardar secuencia\"") .. " a una tecla o botón del mando.",
-      "2. Pulsa el atajo, usa tus habilidades en el orden de tu rotación (mejor contra un muñeco) y vuelve a pulsarlo para guardar. También " .. K:format("/prh grabar") .. " y " .. K:format("/prh fin") .. ".",
-      "3. La lista muestra las siguientes habilidades con su nombre y el botón de la próxima se resalta en tus barras, también en las de mando. Avanza cada vez que usas la habilidad que toca.",
+      "1. En Opciones > Atajos de teclado > AddOns, asigna " .. K:format("\"Abrir / cerrar editor de rotación\"") .. " a una combinación del mando (p. ej. LB+RB+Back). También " .. K:format("/prh editar") .. ".",
+      "2. En el editor, a la derecha están las habilidades de tus barras. Elige una con la cruceta y agrégala con " .. K:format("A") .. ". Se agrega después del paso marcado a la izquierda, así que puedes armar la rotación en orden sin lanzar nada.",
+      "3. Pulsa " .. K:format("B") .. " para guardar y salir. La lista muestra las siguientes habilidades con su nombre, el botón de la próxima se resalta en tus barras (también las de mando) y avanza cada vez que usas la habilidad que toca.",
     },
   },
   {
@@ -22,20 +22,21 @@ Manual.SECTIONS = {
     title = "Mover y bloquear la lista",
     lines = {
       "- Desbloqueada (fondo azul): arrástrala con el ratón o el cursor del mando, o usa los atajos " .. K:format("\"Mover lista arriba/abajo/izquierda/derecha\"") .. ". La posición se guarda.",
+      "- En el editor, " .. K:format("Menú") .. " desbloquea la lista para moverla con la cruceta y la vuelve a bloquear.",
       "- Bloquéala o desbloquéala con el candado sobre la lista, el atajo " .. K:format("\"Bloquear / desbloquear lista\"") .. ", la casilla de este panel o " .. K:format("/prh bloquear") .. ". Bloqueada, deja pasar los clics.",
     },
   },
   {
-    key = "focus",
-    title = "Modo foco con el mando",
+    key = "editor",
+    title = "Editor de rotación con el mando",
     lines = {
-      "Asigna " .. K:format("\"Foco en la lista\"") .. " a una combinación del mando (p. ej. LB+RB+Back) o escribe " .. K:format("/prh foco") .. ". Mientras dura el foco:",
-      "- " .. K:format("Cruceta") .. ": con la lista bloqueada, arriba/abajo eligen un paso (marcado en azul); desbloqueada, mueve la lista.",
-      "- " .. K:format("A") .. ": bloquear o desbloquear la lista.",
-      "- " .. K:format("X") .. ": sacar el paso elegido. Grabando, saca un paso de lo grabado en vez de agregar uno.",
-      "- " .. K:format("B") .. ": salir del foco.",
-      "- Teclado: flechas, Enter, Supr y Retroceso hacen lo mismo.",
-      "|cffff8040Botones reservados:|r la combinación del foco es del addon y no lanza habilidades; si se la asignas a una habilidad, el juego se la quita al foco. Durante el foco, la cruceta, A, X y B tampoco lanzan habilidades. El foco no se abre en combate y se cierra solo al entrar en combate.",
+      "- " .. K:format("Cruceta") .. ": arriba/abajo eligen; izquierda/derecha cambian entre " .. K:format("Tu rotación") .. " y " .. K:format("Habilidades en tus barras") .. ".",
+      "- " .. K:format("A") .. ": en Habilidades, agrega la elegida después del paso marcado. En Tu rotación, toma el paso para reordenarlo (muévelo con la cruceta y suéltalo con A).",
+      "- " .. K:format("X") .. ": quita el paso marcado.   " .. K:format("Y") .. ": deshace el último cambio.",
+      "- " .. K:format("B") .. ": guarda y sale.   " .. K:format("Vista") .. ": descarta los cambios.   " .. K:format("Menú") .. ": mover la lista con la cruceta y bloquearla.",
+      "- Teclado y ratón: flechas, Enter, Supr y Retroceso, clic en las filas y los botones Guardar y Descartar.",
+      "|cffff8040Botones reservados:|r la combinación que abre el editor es del addon y no lanza habilidades; si se la asignas a una habilidad, el juego se la quita al editor. Mientras el editor está abierto, la cruceta y A, B, X, Y, Menú y Vista tampoco lanzan habilidades. El editor no se abre en combate y se cierra (guardando) al entrar en combate.",
+      "- Alternativa: el atajo " .. K:format("\"Grabar secuencia\"") .. " graba lo que lanzas de verdad; al terminar se abre el editor para quitar lo que pulsaste por error.",
     },
   },
   {
@@ -52,7 +53,7 @@ Manual.SECTIONS = {
     key = "commands",
     title = "Comandos",
     lines = {
-      K:format("/prh") .. " opciones   " .. K:format("/prh ayuda") .. " bienvenida   " .. K:format("/prh foco") .. "   " .. K:format("/prh bloquear"),
+      K:format("/prh") .. " opciones   " .. K:format("/prh editar") .. " editor   " .. K:format("/prh ayuda") .. " bienvenida   " .. K:format("/prh bloquear"),
       K:format("/prh grabar") .. " · " .. K:format("fin") .. " · " .. K:format("cancelar") .. " · " .. K:format("deshacer") .. "   " .. K:format("/prh reset") .. " vuelve al primer paso",
     },
   },

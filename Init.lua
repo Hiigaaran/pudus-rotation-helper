@@ -7,13 +7,6 @@ local recorder -- no nil mientras se graba una secuencia
 local PREFIX = "|cffffd100Pudu's Rotation Helper:|r "
 
 local function refresh()
-  if ns.Focus and ns.Focus.active then
-    -- En foco se ve la lista completa en su orden, con el paso elegido marcado.
-    local steps = ns.GetEditableList()
-    ns.Bar:Refresh(steps, ns.Focus:HintText(), true, ns.db.locked and math.min(ns.Focus.index, #steps) or nil)
-    ns.Highlight:Show(nil)
-    return
-  end
   if recorder then
     -- Mientras se graba, la barra muestra lo grabado (los últimos 8) y no hay resaltado.
     local steps, shown = recorder.steps, {}
@@ -52,8 +45,9 @@ end
 -- Grabación: el jugador pulsa sus habilidades en el orden de la rotación (teclado o mando).
 -- Se registra cada intento, aunque falle por falta de objetivo, rango o recurso.
 local function startRecording()
+  if ns.EditorUI and ns.EditorUI.open then return end
   recorder = ns.Recorder.new()
-  print(PREFIX .. "grabando. Pulsa tus habilidades en orden y vuelve a pulsar el atajo (o /prh fin) para guardar.")
+  print(PREFIX .. "grabando. Pulsa tus habilidades en orden y vuelve a pulsar el atajo (o /prh fin): se abrirá el editor para revisar la lista.")
   refresh()
 end
 
@@ -61,8 +55,15 @@ local function stopRecording(save)
   local steps = recorder:Steps()
   recorder = nil
   if save and #steps > 0 then
-    ns.SetProfile(steps, "sequence")
-    print(PREFIX .. #steps .. " pasos guardados.")
+    if InCombatLockdown() then
+      ns.SetProfile(steps, "sequence")
+      print(PREFIX .. #steps .. " pasos guardados. Abre el editor fuera de combate para revisarlos.")
+    else
+      -- Lo grabado se revisa en el editor (quitar pulsaciones por error) antes de guardarlo.
+      ns.LoadRotation()
+      ns.EditorUI:Open(steps)
+      return
+    end
   else
     print(PREFIX .. "grabación cancelada.")
   end
@@ -70,19 +71,6 @@ local function stopRecording(save)
 end
 
 ns.Refresh = refresh
-
--- Lista que edita el modo foco: la grabación en curso o la rotación guardada.
--- Devuelve los pasos y una función para guardar los cambios.
-function ns.GetEditableList()
-  if recorder then
-    return recorder.steps, function() refresh() end
-  end
-  local steps, mode = ns.GetActiveProfile()
-  return steps, function(newSteps)
-    ns.SetProfile(newSteps, mode)
-    ns.LoadRotation()
-  end
-end
 
 function PudusRotationHelper_ToggleRecord()
   if recorder then stopRecording(true) else startRecording() end
@@ -93,7 +81,7 @@ function PudusRotationHelper_Undo()
 end
 
 BINDING_HEADER_PUDUSROTATIONHELPER = "Pudu's Rotation Helper"
-BINDING_NAME_PUDUSROTATIONHELPER_TOGGLERECORD = "Grabar / guardar secuencia"
+BINDING_NAME_PUDUSROTATIONHELPER_TOGGLERECORD = "Grabar secuencia lanzando habilidades (luego se revisa en el editor)"
 BINDING_NAME_PUDUSROTATIONHELPER_UNDO = "Deshacer último paso grabado"
 
 local RECORD_EVENTS = {
@@ -107,7 +95,7 @@ events:SetScript("OnEvent", function(_, event, ...)
     if ... == addonName then
       -- Si el .toc cambió y solo se hizo /reload, el juego no carga los archivos nuevos.
       local missing = {}
-      for _, m in ipairs({ "Rotation", "Recorder", "Import", "Bar", "Highlight", "Manual", "Options", "Splash", "Focus" }) do
+      for _, m in ipairs({ "Rotation", "Recorder", "Import", "Bar", "Highlight", "Manual", "Options", "Splash", "EditorModel", "EditorUI" }) do
         if not ns[m] then missing[#missing + 1] = m end
       end
       if #missing > 0 then
@@ -163,7 +151,7 @@ for e in pairs(RECORD_EVENTS) do events:RegisterUnitEvent(e, "player") end
 
 -- /prh                   -> abre el panel de opciones
 -- /prh ayuda             -> vuelve a mostrar la pantalla de bienvenida
--- /prh foco              -> entra o sale del modo foco en la lista
+-- /prh editar            -> abre el editor de rotación (pensado para el mando)
 -- /prh bloquear          -> bloquea o desbloquea la posición de la lista
 -- /prh grabar            -> empieza a grabar la secuencia pulsando habilidades
 -- /prh fin               -> guarda la grabación      /prh cancelar  -> la descarta
@@ -194,14 +182,14 @@ SlashCmdList.PUDUSROTATIONHELPER = function(msg)
     ns.Options:Open()
   elseif cmd == "bienvenida" or cmd == "ayuda" or cmd == "help" then
     ns.Splash:Show()
-  elseif cmd == "foco" or cmd == "focus" then
-    ns.Focus:Toggle()
+  elseif cmd == "editar" or cmd == "editor" or cmd == "foco" then
+    ns.EditorUI:Toggle()
   elseif cmd == "bloquear" or cmd == "lock" then
     ns.Bar:ToggleLock()
   elseif cmd == "reset" and rotation then
     rotation:Reset()
     refresh()
   else
-    print(PREFIX .. "/prh (opciones) | ayuda | foco | bloquear | grabar | fin | cancelar | deshacer | reset | set <IDs> | prio <IDs>")
+    print(PREFIX .. "/prh (opciones) | editar | ayuda | bloquear | grabar | fin | cancelar | deshacer | reset | set <IDs> | prio <IDs>")
   end
 end

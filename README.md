@@ -16,7 +16,8 @@ El addon solo muestra sugerencias; no lanza habilidades.
 | `UI/Manual.lua` | Manual de uso compartido y su sección en el panel |
 | `UI/Options.lua` | Panel de opciones |
 | `UI/Splash.lua` | Pantalla de bienvenida |
-| `UI/Focus.lua` | Modo foco para editar la lista con el mando |
+| `Core/EditorModel.lua` | Lógica del editor (agregar, quitar, reordenar, deshacer) |
+| `UI/Editor.lua` | Ventana del editor para mando |
 | `Bindings.xml` | Atajos asignables (grabar, deshacer) |
 | `Core/Config.lua` | Rotaciones guardadas por clase y perfil |
 | `UI/Bar.lua` | Barra movible con los próximos iconos |
@@ -26,11 +27,9 @@ El addon solo muestra sugerencias; no lanza habilidades.
 
 ## Uso
 
-La forma principal de configurar la rotación es grabarla en el juego:
+La forma principal de configurar la rotación es el **editor de rotación** (ver más abajo): eliges las habilidades desde tus barras con la cruceta y A, sin lanzarlas, y guardas con B.
 
-1. Asigna el atajo "Grabar / guardar secuencia" en Opciones > Atajos de teclado > AddOns (sirve un botón del mando) o escribe `/prh grabar`.
-2. Pulsa tus habilidades en el orden de la rotación. Cada pulsación cuenta aunque falle por falta de objetivo o recurso; mejor hacerlo contra un muñeco de entrenamiento.
-3. Pulsa de nuevo el atajo (o `/prh fin`) para guardar. `/prh deshacer` quita el último paso y `/prh cancelar` descarta la grabación.
+Alternativa: grabar lanzando habilidades con el atajo "Grabar secuencia" o `/prh grabar`, y terminar con el mismo atajo o `/prh fin`. Al terminar se abre el editor para quitar lo que se pulsó por error antes de guardar.
 
 ## Manual de uso
 
@@ -40,18 +39,22 @@ Las instrucciones viven en `UI/Manual.lua` y se muestran en dos sitios con el mi
 
 Al iniciar sesión con un personaje aparece una pantalla con las instrucciones básicas. Se desactiva con su casilla "Mostrar al iniciar sesión" y se vuelve a abrir con `/prh ayuda` o desde el panel de opciones. La imagen está en `Media/splash.tga` (1024×512).
 
-## Modo foco (mando)
+## Editor de rotación (mando)
 
-Asigna el atajo "Foco en la lista" a una combinación del mando (por ejemplo LB+RB+Back) en Opciones > Atajos de teclado > AddOns, o usa `/prh foco`. Mientras dura el foco, estos botones editan la lista en vez de lanzar habilidades:
+Asigna "Abrir / cerrar editor de rotación" a una combinación del mando (por ejemplo LB+RB+Back) o usa `/prh editar`. El editor tiene dos columnas: tu rotación a la izquierda y las habilidades de tus barras a la derecha. Nada se lanza mientras está abierto.
 
-| Botón | Lista bloqueada | Lista desbloqueada |
-| --- | --- | --- |
-| Cruceta | Elegir paso (arriba/abajo) | Mover la lista |
-| A | Desbloquear | Bloquear |
-| X | Sacar el paso elegido | Sacar el paso elegido |
-| B | Salir del foco | Salir del foco |
+| Botón | Qué hace |
+| --- | --- |
+| Cruceta arriba/abajo | Elegir (o mover el paso tomado) |
+| Cruceta izquierda/derecha | Cambiar de columna |
+| A | En Habilidades: agregar después del paso marcado. En Tu rotación: tomar/soltar para reordenar |
+| X | Quitar el paso marcado |
+| Y | Deshacer |
+| B | Guardar y salir |
+| Vista | Descartar cambios |
+| Menú | Mover la lista con la cruceta y bloquearla |
 
-Con teclado: flechas, Enter, Supr y Retroceso. La combinación del foco queda reservada para el addon: si la asignas a una habilidad, el juego le quita el atajo al foco. El foco no se abre en combate y se cierra solo al entrar en combate, porque el juego no permite cambiar atajos durante el combate. Durante una grabación, el foco edita lo grabado.
+Con teclado: flechas, Enter, Supr y Retroceso; con ratón, clic en las filas y los botones Guardar y Descartar. La combinación del editor queda reservada para el addon. El editor no se abre en combate y se cierra guardando al entrar en combate. La grabación lanzando habilidades sigue disponible y, al terminar, abre el editor para limpiar lo grabado.
 
 ## Panel de opciones
 
@@ -60,7 +63,7 @@ Con teclado: flechas, Enter, Supr y Retroceso. La combinación del foco queda re
 - **Escala de la lista** de 50 % a 200 %.
 - **Color del resaltado** de la habilidad en las barras (teclado y mando).
 - **Bloquear la posición de la lista.** También con el candado sobre la lista, `/prh bloquear` o el atajo "Bloquear / desbloquear lista". Desbloqueada, se arrastra con el ratón (o el cursor del mando) o con los atajos "Mover lista arriba/abajo/izquierda/derecha", asignables a combinaciones del mando. La posición se guarda.
-- **Rotación actual** y botón para grabarla.
+- **Rotación actual** y botón para abrir el editor.
 - **Importar / exportar en markdown.** Los addons no pueden leer archivos, así que el `.md` se prepara fuera del juego y se pega en el cuadro. Formato (ver `ejemplos/plantilla.md`):
 
 ```markdown
