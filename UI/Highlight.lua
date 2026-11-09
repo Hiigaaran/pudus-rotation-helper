@@ -2,7 +2,18 @@ local _, ns = ...
 
 -- Resaltado propio encima del botón de acción. Nunca modificamos el botón de Blizzard
 -- (evita taint y "Acción bloqueada" en la interfaz de mando).
-local Highlight = { bySpell = {}, overlays = {} }
+--
+-- Comprobado en WoW: Forever (Interface 16001): las barras de mando son botones con
+-- campo .action, p. ej. GamepadMainActionBarFramePageUnitLeftCenteredAnchorLeftBarActionButton1
+-- (casilla 185). Al cambiar de set de barras la casilla del botón puede cambiar, así que
+-- guardamos la lista de botones y resolvemos el hechizo de cada uno al mostrar.
+local Highlight = { buttons = {}, overlays = {} }
+
+local function slotOf(button)
+  local slot = button.action
+  if type(slot) ~= "number" and button.GetAttribute then slot = button:GetAttribute("action") end
+  if type(slot) == "number" and slot > 0 then return slot end
+end
 
 local function overlayFor(button)
   local o = Highlight.overlays[button]
@@ -13,42 +24,36 @@ local function overlayFor(button)
     border:SetAllPoints()
     border:SetAtlas("UI-HUD-ActionBar-IconFrame-Mouseover") -- por verificar en Forever
     border:SetVertexColor(1, 0.85, 0.1)
+    o:SetAllPoints(button)
     o:Hide()
     Highlight.overlays[button] = o
   end
-  o:ClearAllPoints()
-  o:SetAllPoints(button)
   return o
 end
 
--- Recorre todos los frames con un slot de acción (barras normales y, si son ActionButton
--- estándar, las de mando). Solo fuera de combate.
+-- Recorre todos los frames con un campo de acción (barras de teclado y de mando).
+-- Crea los overlays, así que solo se hace fuera de combate.
 function Highlight:Rebuild()
   if InCombatLockdown() then self.dirty = true return end
-  wipe(self.bySpell)
+  wipe(self.buttons)
   local f = EnumerateFrames()
   while f do
-    if f.IsObjectType and f:IsObjectType("CheckButton") then
-      local slot = f.action or (f.GetAttribute and f:GetAttribute("action"))
-      if type(slot) == "number" then
-        local kind, id = GetActionInfo(slot)
-        if kind == "spell" and id then
-          self.bySpell[id] = self.bySpell[id] or {}
-          table.insert(self.bySpell[id], f)
-          overlayFor(f)
-        end
-      end
+    if not (f.IsForbidden and f:IsForbidden()) and (f.action ~= nil or (f.GetAttribute and f:GetAttribute("action"))) then
+      self.buttons[#self.buttons + 1] = f
+      overlayFor(f)
     end
     f = EnumerateFrames(f)
   end
   self.dirty = false
 end
 
--- Mostrar/ocultar nuestros overlays sí está permitido en combate (no son frames seguros).
+-- Leer .action y GetActionInfo y mostrar/ocultar frames propios está permitido en combate.
 function Highlight:Show(spellID)
-  for _, o in pairs(self.overlays) do o:Hide() end
-  for _, button in ipairs(self.bySpell[spellID] or {}) do
-    if button:IsVisible() then self.overlays[button]:Show() end
+  for button, o in pairs(self.overlays) do
+    local slot = slotOf(button)
+    local kind, id
+    if slot then kind, id = GetActionInfo(slot) end
+    o:SetShown(kind == "spell" and id == spellID and button:IsVisible())
   end
 end
 

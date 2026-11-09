@@ -24,17 +24,22 @@ events:SetScript("OnEvent", function(_, event, ...)
   elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
     local _, _, spellID = ...
     if rotation and rotation:OnCast(spellID) then refresh() end
-  elseif event == "ACTIONBAR_SLOT_CHANGED" or event == "PLAYER_REGEN_ENABLED" then
-    if event == "ACTIONBAR_SLOT_CHANGED" or ns.Highlight.dirty then
-      ns.Highlight:Rebuild()
-      refresh()
-    end
+  elseif event == "PLAYER_REGEN_ENABLED" then
+    if ns.Highlight.dirty then ns.Highlight:Rebuild() end
+    refresh()
+  else
+    -- Cambio de casilla, de página o de set de barras de mando. Fuera de combate volvemos a
+    -- buscar botones (la UI de mando puede crearlos al activarla); en combate basta con refrescar.
+    if not InCombatLockdown() then ns.Highlight:Rebuild() end
+    refresh()
   end
 end)
 events:RegisterEvent("ADDON_LOADED")
 events:RegisterEvent("PLAYER_ENTERING_WORLD")
 events:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
 events:RegisterEvent("PLAYER_REGEN_ENABLED")
+events:RegisterEvent("ACTIONBAR_PAGE_CHANGED")
+events:RegisterEvent("UPDATE_BONUS_ACTIONBAR")
 events:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
 
 -- /prh set 133 116 133   -> guarda la rotación (IDs de hechizo)
